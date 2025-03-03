@@ -54,9 +54,3 @@ blueprint:
 	mkdir -p internal/filter && echo 'package filter' > internal/filter/filter.go
 	mkdir -p internal/receiver && echo 'package receiver' > internal/receiver/receiver.go
 	mkdir -p internal/cluster && echo 'package cluster' > internal/cluster/cluster.go
-
-api-generate:
-	go mod tidy
-	go mod download
-	go generate ./...
-
