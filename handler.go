@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"net/http"
+	"sync"
 	"time"
 
 	"go-players-data/internal/cluster"
@@ -11,6 +12,7 @@ import (
 	"go-players-data/internal/filter"
 	"go-players-data/internal/logger"
 	"go-players-data/internal/mailer"
+	"go-players-data/internal/model"
 	"go-players-data/internal/player"
 	"go-players-data/internal/templateloader"
 )
@@ -80,15 +82,11 @@ func Handler() (*Response, error) {
 
 	clusters := clusterProcessor.ByStoreNumber(players)
 
-	for storeNumber, clusterPlayers := range clusters {
-		if err = mailProcessor.Send(storeNumber, clusterPlayers); err != nil {
-			logger.Error("main.Handler: Failed to send mail",
-				"err", err,
-				"cluster", storeNumber,
-				"players", len(clusterPlayers),
-			)
-		}
-	}
+	mailByCluster(
+		mailProcessor,
+		clusters,
+		cfg.App.MaxGoroutines,
+	)
 
 	logger.Debug("main.Handler", "offline_players", len(players), "all_players", len(allPlayers))
 
@@ -96,4 +94,34 @@ func Handler() (*Response, error) {
 		StatusCode: 200,
 		Body:       "Successful response",
 	}, nil
+}
+
+func mailByCluster(m mailer.Mailer, clusters map[int][]*model.Player, maxGoroutines int) {
+	start := time.Now()
+	defer func() { logger.Debug("main.mailByCluster: Time spent", "time", time.Since(start).String()) }()
+
+	sem := make(chan struct{}, maxGoroutines)
+	var wg sync.WaitGroup
+
+	for storeNumber, clusterPlayers := range clusters {
+		sem <- struct{}{}
+		wg.Add(1)
+
+		go func(sn int, players []*model.Player) {
+			defer func() {
+				<-sem
+				wg.Done()
+			}()
+
+			if err := m.Send(storeNumber, players); err != nil {
+				logger.Error("main.Handler: Failed to send mail",
+					"err", err,
+					"cluster", storeNumber,
+					"players", len(clusterPlayers),
+				)
+			}
+		}(storeNumber, clusterPlayers)
+	}
+
+	wg.Wait()
 }
