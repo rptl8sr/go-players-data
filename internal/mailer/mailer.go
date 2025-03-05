@@ -7,8 +7,10 @@ import (
 	"html/template"
 	"net/smtp"
 	"strings"
+	"time"
 
 	"go-players-data/internal/config"
+	"go-players-data/internal/logger"
 	"go-players-data/internal/model"
 	"go-players-data/internal/templateloader"
 )
@@ -52,6 +54,9 @@ func New(cfg config.Mail, loader *templateloader.Loader) (Mailer, error) {
 }
 
 func (m *mailer) Send(storeNumber int, players []*model.Player) error {
+	start := time.Now()
+	defer func() { logger.Debug("mailer.Send: Time spent", "time", time.Since(start).String()) }()
+
 	body, err := m.body(storeNumber, players)
 	if err != nil {
 		return fmt.Errorf("mailer.Send: failed to build mail body: %w", err)
