@@ -24,9 +24,10 @@ type Config struct {
 }
 
 type App struct {
-	Version  string     `env:"APP_VERSION" env-default:"0.0.1"`
-	LogLevel slog.Level `env:"APP_LOG_LEVEL" env-default:"info"`
-	Mode     Mode       `env:"APP_MODE" env-default:"prod"`
+	Version       string     `env:"APP_VERSION" env-default:"0.0.1"`
+	LogLevel      slog.Level `env:"APP_LOG_LEVEL" env-default:"info"`
+	Mode          Mode       `env:"APP_MODE" env-default:"prod"`
+	MaxGoroutines int        `env:"APP_MAX_GOROUTINES" env-default:"5"`
 }
 
 type Mail struct {
