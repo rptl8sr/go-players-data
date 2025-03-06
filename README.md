@@ -141,7 +141,7 @@ This:
 
 ## Usage
 
-- Timer Trigger: The function runs daily at 7:20 UTC (configurable via CRON), fetching data and sending emails.
+- Timer Trigger: The function runs daily at 10:00 UTC (configurable via CRON), fetching data and sending emails.
 - HTTP Trigger: Invoke manually via the function's HTTP endpoint (returned by yc serverless function get):
 
 ```bash
