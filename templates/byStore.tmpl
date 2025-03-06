@@ -1,0 +1,19 @@
+From: {{.From}}
+To: {{join .To ","}}
+Subject: =?UTF-8?B?{{base64enc .Subject}}?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+<requester>{{.StoreID}}</requester>
+<description>
+Плеер не в сети более: 48 ч
+
+{{range .Players}}
+Имя: {{.PlayerName}}
+Время: {{.LastOnline.Format "2006-01-02 15:04:05"}}
+IP: {{.IP}}
+MAC: {{.MAC}}
+Тип: {{.Type}}
+
+{{end}}
+</description>
