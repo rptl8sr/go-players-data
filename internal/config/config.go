@@ -36,7 +36,7 @@ type Mail struct {
 	Password     string         `env:"MAIL_PASSWORD"`
 	Port         int            `env:"MAIL_PORT"`
 	To           []string       `env:"MAIL_TO"`
-	MailStores   map[int]string `env:"MAIL_STORES"` // MAIL_STORES='123456:mail@domain.com,00000:mail@domain2.com'
+	MailStores   map[int]string `env:"MAIL_STORES"`
 	Subject      string         `env:"MAIL_SUBJECT"`
 	TemplateName string         `env:"MAIL_TEMPLATE_NAME"`
 }
@@ -59,13 +59,6 @@ func Must() Config {
 	if err := cleanenv.ReadEnv(&config); err != nil {
 		panic(fmt.Sprintf("Error processing environment variables: %v", err))
 	}
-
-	//normalizedCompanies := make(map[string]string, len(config.Data.Companies))
-	//for _, k := range config.Data.Companies {
-	//	normalizedCompanies[strings.ToLower(k)] = strings.ToLower(config.Data.Companies[k])
-	//}
-	//
-	//config.Data.Companies = normalizedCompanies
 
 	return config
 }
