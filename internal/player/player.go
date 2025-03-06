@@ -155,13 +155,13 @@ func (p *parser) parseTags(player *model.Player) {
 		case strings.HasPrefix(tag, p.storeNumberPrefix):
 			numberTag := strings.TrimPrefix(tag, p.storeNumberPrefix)
 			if numberTag == "" {
-				logger.Debug("parser.RawToPlayer: Empty store number tag", "player", p)
+				logger.Debug("parser.RawToPlayer: Empty store number tag", "player", player)
 				continue
 			}
 
 			n, err := strconv.Atoi(numberTag)
 			if err != nil {
-				logger.Error("parser.RawToPlayer: Error converting number tag to int", "err", err, "numberTag", numberTag, "player", p)
+				logger.Error("parser.RawToPlayer: Error converting number tag to int", "err", err, "numberTag", numberTag, "player", player)
 				continue
 			}
 
@@ -173,13 +173,13 @@ func (p *parser) parseTags(player *model.Player) {
 		case strings.HasPrefix(tag, p.companyNamePrefix):
 			companyNameTag := strings.TrimPrefix(tag, p.companyNamePrefix)
 			if companyNameTag == "" {
-				logger.Warn("parser.RawToPlayer: Empty company name tag", "player", p)
+				logger.Warn("parser.RawToPlayer: Empty company name tag", "player", player)
 				continue
 			}
 
 			v, ok := p.companies[companyNameTag]
 			if !ok {
-				logger.Warn("parser.RawToPlayer: Unknown company name", "company_name", companyNameTag, "player", p)
+				logger.Warn("parser.RawToPlayer: Unknown company name", "company_name", companyNameTag, "player", player)
 				player.CompanyName = companyNameTag
 			} else {
 				player.CompanyName = v
