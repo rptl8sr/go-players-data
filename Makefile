@@ -1,4 +1,4 @@
-.PHONY: git-init git-checkout golangci-lint-install lint blueprint api-generate
+.PHONY: git-init git-checkout golangci-lint-install lint blueprint fn-deploy fn-create fn-zip fn-create-version fn-timer fn-clear fn-list fn-version-list
 
 REPO_NAME := $(shell basename $(CURDIR))
 PROJECT := $(CURDIR)

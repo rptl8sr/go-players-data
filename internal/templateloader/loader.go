@@ -7,14 +7,19 @@ import (
 	"path/filepath"
 )
 
+// templatesDirDefault defines the default directory name where template files are stored if no other directory is specified.
 const (
 	templatesDirDefault = "templates"
 )
 
+// Loader is a struct that manages the loading of templates from a specified directory.
 type Loader struct {
 	templatesDir string
 }
 
+// New initializes a Loader instance with the provided template directories
+// or a default directory if none are specified.
+// Returns an error if the specified directory does not exist.
 func New(templatesDir ...string) (*Loader, error) {
 	if len(templatesDir) == 0 {
 		templatesDir = []string{templatesDirDefault}
@@ -29,6 +34,8 @@ func New(templatesDir ...string) (*Loader, error) {
 	}, nil
 }
 
+// Load loads a template by name from the loader's templates directory and applies the given template functions.
+// Returns the parsed template or an error if the file is not found or cannot be parsed.
 func (t *Loader) Load(name string, funcs template.FuncMap) (*template.Template, error) {
 	tmplPath := filepath.Join(t.templatesDir, fmt.Sprintf("%s.tmpl", name))
 

@@ -12,12 +12,16 @@ import (
 	"go-players-data/internal/model"
 )
 
+// ErrParseID is returned when an error occurs while parsing or converting the ID field from input data.
+// ErrParseTZ is returned when an error occurs while parsing or converting the time zone from input data.
+// ErrParseLastOnline is returned when an error occurs while parsing the "last online" timestamp from input data.
 var (
 	ErrParseID         = errors.New("error parsing id")
-	ErrParseTZ         = errors.New("error parsing time zone")
+	ErrParseTZ         = errors.New("error parsing time zone") // ErrParseLastOnline is returned when an error occurs while parsing the "last online" timestamp from input data.
 	ErrParseLastOnline = errors.New("error parsing last online")
 )
 
+// parser is a struct that provides functionality to parse and transform data into structured and validated formats.
 type parser struct {
 	storeTestNumber   int
 	storeNumberPrefix string
@@ -25,11 +29,13 @@ type parser struct {
 	companies         map[string]string
 }
 
+// Parser is an interface for parsing raw byte data into structured player objects.
 type Parser interface {
-	// Players parse the provided JSON-encoded body and return a slice of Player structs or an error if parsing fails.
 	Players(body []byte) ([]*model.Player, error)
 }
 
+// New initializes and returns a new Parser instance configured with the provided configuration data.
+// It ensures that the Companies map is not nil, creating a new map if necessary.
 func New(cfg config.Data) Parser {
 	if cfg.Companies == nil {
 		cfg.Companies = make(map[string]string)

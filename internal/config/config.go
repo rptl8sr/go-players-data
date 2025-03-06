@@ -10,6 +10,7 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
+// Mode represents the application runtime mode.
 type Mode string
 
 const (
@@ -17,6 +18,7 @@ const (
 	Dev  Mode = "dev"
 )
 
+// Config holds the application configuration.
 type Config struct {
 	App  App
 	Mail Mail
@@ -53,6 +55,8 @@ type Data struct {
 	CompanyNamePrefix string            `env:"DATA_COMPANY_NAME_PREFIX"`
 }
 
+// Must load the configuration and panics if it fails.
+// Use this when configuration is required for the application to start.
 func Must() Config {
 	var config Config
 

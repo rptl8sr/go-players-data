@@ -2,6 +2,7 @@ package model
 
 import "time"
 
+// The Player represents a user or entity with specific attributes within a system.
 type Player struct {
 	Number       int       `json:"number"`
 	ID           int       `json:"ID"`
@@ -21,6 +22,8 @@ type Player struct {
 	CompanyName  string    `json:"companyName"`
 }
 
+// PlayerReceive represents the raw JSON structure for player data received from an external source.
+// Fields include metadata about the player such as ID, group name, tags, and network details.
 type PlayerReceive struct {
 	Number       int    `json:"number"`
 	ID           string `json:"id"`
