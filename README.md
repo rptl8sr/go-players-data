@@ -71,9 +71,9 @@ MAIL_HOST=smtp.domain.com  # Email host
 MAIL_PASSWORD=email_password # Email sender password
 MAIL_PORT=12345 # Email port
 MAIL_TO=receiver01@domain.com,receiver02@domain.com # Comma separated email recepients
-MAIL_SUBJECT='Any email subject' # Email subject
+MAIL_SUBJECT=Any email subject # Email subject
 MAIL_TEMPLATE_NAME=byStore # Template for email
-MAIL_STORES='1111:store01@domain.com,22222:store02@domain.com' # Optional. Mapping storeNumbers with its email
+MAIL_STORES=1111:store01@domain.com,22222:store02@domain.com # Optional. Mapping storeNumbers with its email
 
 # Data source settings
 DATA_URL=https://api.example.com/players # Data source
