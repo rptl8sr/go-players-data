@@ -109,7 +109,7 @@ func (m *mailer) body(storeNumber int, players []*model.Player) (string, error) 
 		StoreID:     storeID,
 		Players:     players,
 	}
-
+	logger.Debug("mailer.body: Data", "storeNumber", storeNumber, "storeID", storeID, "players_count", len(players))
 	if err := m.tmpl.Execute(&buf, data); err != nil {
 		return "", fmt.Errorf("mailer.body: failed to execute template: %w", err)
 	}
