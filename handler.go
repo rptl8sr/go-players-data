@@ -60,7 +60,7 @@ func Handler(ctx context.Context, event interface{}) (*Response, error) {
 	// Initialize dependencies for data processing
 	dataFetcher := fetcher.New(http.DefaultClient, cfg.Data.Url, cfg.Data.ApiKey)
 	playerParser := player.New(cfg.Data)
-	filterCriteria := filter.New(cfg.Data.IgnoredGroups, cfg.Data.AllowedCompanies, cfg.Data.MaxOffline)
+	filterCriteria := filter.New(cfg.Data.IgnoredGroups, cfg.Data.AllowedCompanies, cfg.Data.IgnoredTags, cfg.Data.MaxOffline)
 	clusterProcessor := cluster.New()
 
 	// Load email templates

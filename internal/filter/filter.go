@@ -22,10 +22,11 @@ type Criteria interface {
 }
 
 // New creates a new Filter instance with the specified criteria.
-func New(ignoredGroups []string, allowedCompanies []string, maxOffline time.Duration) Criteria {
+func New(ignoredGroups, allowedCompanies, ignoredTags []string, maxOffline time.Duration) Criteria {
 	return &criteria{
 		ignoredGroups:    ignoredGroups,
 		allowedCompanies: allowedCompanies,
+		ignoredTags:      ignoredTags,
 		maxOffline:       maxOffline,
 	}
 }
