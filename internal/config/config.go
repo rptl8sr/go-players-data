@@ -53,6 +53,7 @@ type Data struct {
 	StoreTestNumber   int               `env:"DATA_STORE_TEST_NUMBER"`
 	StoreNumberPrefix string            `env:"DATA_STORE_NUMBER_PREFIX"`
 	CompanyNamePrefix string            `env:"DATA_COMPANY_NAME_PREFIX"`
+	IgnoredTags       []string          `env:"DATA_IGNORED_TAGS"`
 }
 
 // Must load the configuration and panics if it fails.

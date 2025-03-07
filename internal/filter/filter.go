@@ -11,6 +11,7 @@ import (
 type criteria struct {
 	ignoredGroups    []string
 	allowedCompanies []string
+	ignoredTags      []string
 	maxOffline       time.Duration
 }
 
@@ -53,14 +54,22 @@ func (c *criteria) Filter(players []*model.Player) ([]*model.Player, error) {
 func (c *criteria) isIgnored(p *model.Player) bool {
 	groupName := c.extractGroupName(p)
 
+	// If player's tag in ignored tags
+	if c.intersection(c.ignoredTags, p.Tags) {
+		return true
+	}
+
+	// If player's group name in ignored groups
 	if c.stringInSlice(c.ignoredGroups, groupName) {
 		return true
 	}
 
+	// If player's company name not in ignored groups
 	if !c.stringInSlice(c.allowedCompanies, p.CompanyName) {
 		return true
 	}
 
+	// Last online time threshold
 	if c.hoursDelta(p.LastOnline) <= c.maxOffline.Hours() {
 		return true
 	}
@@ -71,6 +80,16 @@ func (c *criteria) isIgnored(p *model.Player) bool {
 // extractGroupName extracts and returns the first segment of the GroupName field in the provided Player struct.
 func (c *criteria) extractGroupName(player *model.Player) string {
 	return strings.Split(player.GroupName, "/")[0]
+}
+
+// intersection checks if there is at least one common element between two slices of strings and returns true if found.
+func (c *criteria) intersection(slice1, slice2 []string) bool {
+	for _, v := range slice1 {
+		if c.stringInSlice(slice2, v) {
+			return true
+		}
+	}
+	return false
 }
 
 // stringInSlice checks if a given string exists within a slice of strings, returning true if found, otherwise false.
