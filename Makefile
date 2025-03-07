@@ -43,7 +43,6 @@ lint-install:
 lint:
 	$(LOCAL_BIN)/golangci-lint run ./...
 
-
 # PROJECT
 blueprint:
 	mkdir -p $(LOCAL_BIN)
@@ -94,7 +93,7 @@ fn-timer:
 fn-clear:
 	rm "./$(YC_FUNC_NAME).zip"
 
-fn-deploy: fn-create fn-zip fn-create-version fn-timer fn-clear
+fn-deploy: lint fn-create fn-zip fn-create-version fn-timer fn-clear
 
 fn-list:
 	yc serverless function list
