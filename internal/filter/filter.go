@@ -14,10 +14,13 @@ type criteria struct {
 	maxOffline       time.Duration
 }
 
+// Criteria defines an interface for filtering a slice of Player objects based on specific conditions.
+// The Filter method returns a filtered list of players and an error if any issues are encountered during the operation.
 type Criteria interface {
 	Filter(players []*model.Player) ([]*model.Player, error)
 }
 
+// New creates a new Filter instance with the specified criteria.
 func New(ignoredGroups []string, allowedCompanies []string, maxOffline time.Duration) Criteria {
 	return &criteria{
 		ignoredGroups:    ignoredGroups,
@@ -26,7 +29,8 @@ func New(ignoredGroups []string, allowedCompanies []string, maxOffline time.Dura
 	}
 }
 
-// Filter filters a list of players based on given configuration criteria, returning the filtered list and an error if any.
+// Filter filters players based on offline duration, group, and company criteria.
+// Returns a slice of players that meet the conditions.
 func (c *criteria) Filter(players []*model.Player) ([]*model.Player, error) {
 	start := time.Now()
 	defer func() { logger.Debug("filter.Filter: Time spent", "time", time.Since(start).String()) }()
@@ -45,6 +49,7 @@ func (c *criteria) Filter(players []*model.Player) ([]*model.Player, error) {
 	return filteredPlayers, nil
 }
 
+// isIgnored determines if a player should be ignored based on group, company, and offline duration criteria.
 func (c *criteria) isIgnored(p *model.Player) bool {
 	groupName := c.extractGroupName(p)
 

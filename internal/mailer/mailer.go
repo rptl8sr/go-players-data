@@ -15,11 +15,13 @@ import (
 	"go-players-data/internal/templateloader"
 )
 
+// mailer is a struct used for managing email configurations and rendering email templates.
 type mailer struct {
 	config config.Mail
 	tmpl   *template.Template
 }
 
+// mailData represents the structure for email-related data including sender, recipients, subject, store details, and players.
 type mailData struct {
 	From        string
 	To          []string
@@ -29,10 +31,14 @@ type mailData struct {
 	Players     []*model.Player
 }
 
+// Mailer defines an interface for sending email notifications to players grouped by store number.
 type Mailer interface {
 	Send(storeNumber int, players []*model.Player) error
 }
 
+// New initializes a Mailer instance with the given configuration and template loader.
+// It loads the mail template using the specified template name and custom template functions.
+// Returns a configured Mailer instance or an error if template initialization fails.
 func New(cfg config.Mail, loader *templateloader.Loader) (Mailer, error) {
 	tmpl, err := loader.Load(
 		cfg.TemplateName,
@@ -53,6 +59,7 @@ func New(cfg config.Mail, loader *templateloader.Loader) (Mailer, error) {
 	}, nil
 }
 
+// Send constructs and sends an email using the specified store number and player details. Returns an error if it fails.
 func (m *mailer) Send(storeNumber int, players []*model.Player) error {
 	start := time.Now()
 	defer func() { logger.Debug("mailer.Send: Time spent", "time", time.Since(start).String()) }()
@@ -69,6 +76,8 @@ func (m *mailer) Send(storeNumber int, players []*model.Player) error {
 	return nil
 }
 
+// send sends an email with the specified body using the configured SMTP server and authentication.
+// returns an error on failure.
 func (m *mailer) send(body string) error {
 	auth := smtp.PlainAuth("", m.config.From, m.config.Password, m.config.Host)
 	return smtp.SendMail(
@@ -80,6 +89,7 @@ func (m *mailer) send(body string) error {
 	)
 }
 
+// body generates the email body using the provided store number and player details, returning it as a string or an error.
 func (m *mailer) body(storeNumber int, players []*model.Player) (string, error) {
 	var storeID string
 

@@ -12,12 +12,16 @@ import (
 	"go-players-data/internal/model"
 )
 
+// ErrParseID is returned when an error occurs while parsing or converting the ID field from input data.
+// ErrParseTZ is returned when an error occurs while parsing or converting the time zone from input data.
+// ErrParseLastOnline is returned when an error occurs while parsing the "last online" timestamp from input data.
 var (
 	ErrParseID         = errors.New("error parsing id")
-	ErrParseTZ         = errors.New("error parsing time zone")
+	ErrParseTZ         = errors.New("error parsing time zone") // ErrParseLastOnline is returned when an error occurs while parsing the "last online" timestamp from input data.
 	ErrParseLastOnline = errors.New("error parsing last online")
 )
 
+// parser is a struct that provides functionality to parse and transform data into structured and validated formats.
 type parser struct {
 	storeTestNumber   int
 	storeNumberPrefix string
@@ -25,11 +29,13 @@ type parser struct {
 	companies         map[string]string
 }
 
+// Parser is an interface for parsing raw byte data into structured player objects.
 type Parser interface {
-	// Players parse the provided JSON-encoded body and return a slice of Player structs or an error if parsing fails.
 	Players(body []byte) ([]*model.Player, error)
 }
 
+// New initializes and returns a new Parser instance configured with the provided configuration data.
+// It ensures that the Companies map is not nil, creating a new map if necessary.
 func New(cfg config.Data) Parser {
 	if cfg.Companies == nil {
 		cfg.Companies = make(map[string]string)
@@ -155,13 +161,13 @@ func (p *parser) parseTags(player *model.Player) {
 		case strings.HasPrefix(tag, p.storeNumberPrefix):
 			numberTag := strings.TrimPrefix(tag, p.storeNumberPrefix)
 			if numberTag == "" {
-				logger.Debug("parser.RawToPlayer: Empty store number tag", "player", player)
+				logger.Debug("parser.parseTags: Empty store number tag", "player", player)
 				continue
 			}
 
 			n, err := strconv.Atoi(numberTag)
 			if err != nil {
-				logger.Error("parser.RawToPlayer: Error converting number tag to int", "err", err, "numberTag", numberTag, "player", player)
+				logger.Error("parser.parseTags: Error converting number tag to int", "err", err, "numberTag", numberTag, "player", player)
 				continue
 			}
 
@@ -173,13 +179,13 @@ func (p *parser) parseTags(player *model.Player) {
 		case strings.HasPrefix(tag, p.companyNamePrefix):
 			companyNameTag := strings.TrimPrefix(tag, p.companyNamePrefix)
 			if companyNameTag == "" {
-				logger.Warn("parser.RawToPlayer: Empty company name tag", "player", player)
+				logger.Warn("parser.parseTags: Empty company name tag", "player", player)
 				continue
 			}
 
 			v, ok := p.companies[companyNameTag]
 			if !ok {
-				logger.Warn("parser.RawToPlayer: Unknown company name", "company_name", companyNameTag, "player", player)
+				logger.Warn("parser.parseTags: Unknown company name", "company_name", companyNameTag, "player", player)
 				player.CompanyName = companyNameTag
 			} else {
 				player.CompanyName = v
